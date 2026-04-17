@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0d274d" />
+  <title>Product and Customer Success Interlock</title>
+  <style>
+    :root {
+      /* Cisco brand palette */
+      --midnight-blue: #0d274d;
+      --ocean-blue: #1e4471;
+      --sky-blue: #00bceb;
+      --orange: #fb7c32;
+      --orange-hover: #e86820;
+      --turquoise: #04aeb1;
+      --teal: #0d5d70;
+      --jungle: #0e404c;
+      --gold: #f9a425;
+      --alert: #cb2626;
+      --bg: #f4f7fb;
+      --surface: #ffffff;
+      --text: #1a3354;
+      --muted: #5a6b82;
+      --border: #d5e0ed;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 1px 3px rgba(13, 39, 77, 0.06), 0 16px 40px rgba(13, 39, 77, 0.08);
+      --font: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: var(--font);
+      font-size: 1rem;
+      line-height: 1.55;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    main.wrap {
+      flex: 1;
+      width: 100%;
+    }
+
+    .site-header {
+      background: linear-gradient(165deg, var(--ocean-blue) 0%, var(--midnight-blue) 55%, var(--jungle) 100%);
+      color: #fff;
+      padding: 1.5rem 1rem 2rem;
+      position: relative;
+      box-shadow: 0 4px 24px rgba(13, 39, 77, 0.25);
+    }
+
+    .site-header::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--sky-blue), var(--orange));
+    }
+
+    .site-header-inner {
+      display: grid;
+      grid-template-columns: minmax(0, 150px) minmax(0, 1fr) minmax(0, 150px);
+      align-items: center;
+      gap: 0.75rem;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .site-logo {
+      justify-self: start;
+      align-self: start;
+      display: block;
+      line-height: 0;
+    }
+
+    .site-logo img {
+      display: block;
+      height: clamp(28px, 5vw, 40px);
+      width: auto;
+      max-width: 150px;
+      object-fit: contain;
+      object-position: left center;
+      filter: brightness(0) invert(1);
+    }
+
+    .site-logo:focus-visible {
+      outline: 2px solid #fff;
+      outline-offset: 4px;
+      border-radius: 4px;
+    }
+
+    .site-header-titles {
+      text-align: center;
+      min-width: 0;
+    }
+
+    .site-header-spacer {
+      min-height: 1px;
+    }
+
+    @media (max-width: 560px) {
+      .site-header-inner {
+        grid-template-columns: 1fr;
+        justify-items: stretch;
+      }
+
+      .site-logo {
+        justify-self: start;
+        margin-bottom: 0.5rem;
+      }
+
+      .site-logo img {
+        max-width: min(200px, 85vw);
+      }
+
+      .site-header-spacer {
+        display: none;
+      }
+    }
+
+    .site-header h1 {
+      margin: 0 0 0.65rem;
+      font-size: clamp(1.5rem, 4vw, 1.95rem);
+      font-weight: 650;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      color: #fff;
+    }
+
+    .site-header .sub {
+      margin: 0 auto;
+      font-size: 1rem;
+      line-height: 1.5;
+      color: rgba(255, 255, 255, 0.88);
+      max-width: 32rem;
+      font-weight: 400;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 2.5rem;
+    }
+
+    .path-pick {
+      display: grid;
+      gap: 0.75rem;
+      margin-bottom: 1.75rem;
+    }
+
+    @media (min-width: 520px) {
+      .path-pick {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .path-option {
+      position: relative;
+    }
+
+    .path-option input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .path-option label {
+      display: block;
+      cursor: pointer;
+      padding: 1.15rem 1.1rem;
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+
+    .path-option label strong {
+      display: block;
+      font-size: 0.95rem;
+      margin-bottom: 0.3rem;
+      letter-spacing: -0.02em;
+      color: var(--midnight-blue);
+      text-align: center;
+    }
+
+    .path-option label span {
+      display: block;
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.45;
+      text-align: left;
+    }
+
+    .path-option input:focus-visible + label {
+      outline: 2px solid var(--orange);
+      outline-offset: 2px;
+    }
+
+    .path-option:first-child input:checked + label {
+      border-color: var(--sky-blue);
+      background: rgba(0, 188, 235, 0.08);
+      box-shadow: 0 0 0 1px var(--sky-blue);
+    }
+
+    .path-option:last-child input:checked + label {
+      border-color: var(--orange);
+      background: rgba(251, 124, 50, 0.07);
+      box-shadow: 0 0 0 1px var(--orange);
+    }
+
+    .panel {
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem 1.35rem 1.35rem;
+      box-shadow: var(--shadow);
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    .panel h2 {
+      margin: 0 0 0.35rem;
+      font-size: 1.1rem;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+      color: var(--midnight-blue);
+    }
+
+    .panel .hint {
+      margin: 0 0 1.25rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .callout {
+      margin-bottom: 1.25rem;
+      padding: 0.9rem 1rem 0.9rem 1rem;
+      font-size: 0.88rem;
+      line-height: 1.55;
+      color: var(--text);
+      background: linear-gradient(90deg, rgba(4, 174, 177, 0.1) 0%, rgba(0, 188, 235, 0.06) 100%);
+      border: 1px solid rgba(13, 93, 112, 0.2);
+      border-left: 4px solid var(--turquoise);
+      border-radius: var(--radius-sm);
+    }
+
+    .callout strong {
+      color: var(--midnight-blue);
+    }
+
+    label.field {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ocean-blue);
+      margin-bottom: 0.35rem;
+    }
+
+    .row {
+      margin-bottom: 1.1rem;
+    }
+
+    .hp {
+      position: absolute;
+      left: -9999px;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="date"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.65rem 0.8rem;
+      font: inherit;
+      color: var(--text);
+      background: #fafcfe;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--orange);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(251, 124, 50, 0.2);
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    textarea.sm {
+      min-height: 88px;
+    }
+
+    .urgency-help {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.35rem;
+    }
+
+    .actions {
+      margin-top: 1.35rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      align-items: center;
+    }
+
+    button[type="submit"] {
+      padding: 0.72rem 1.5rem;
+      font: inherit;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #fff;
+      background: var(--orange);
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.12s, box-shadow 0.2s;
+      box-shadow: 0 2px 8px rgba(251, 124, 50, 0.35);
+    }
+
+    button[type="submit"]:hover {
+      background: var(--orange-hover);
+      box-shadow: 0 4px 14px rgba(251, 124, 50, 0.4);
+    }
+
+    button[type="submit"]:focus-visible {
+      outline: 2px solid var(--midnight-blue);
+      outline-offset: 3px;
+    }
+
+    button[type="submit"]:active {
+      transform: scale(0.98);
+    }
+
+    .note {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .site-footer {
+      margin-top: 0;
+      padding: 1.75rem 1.25rem 2rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.82);
+      background: var(--midnight-blue);
+      border-top: 3px solid var(--orange);
+    }
+
+    .site-footer p {
+      margin: 0.35rem 0;
+      max-width: 28rem;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.5;
+    }
+
+    .site-footer p:first-child {
+      margin-top: 0;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    .submit-status {
+      display: none;
+      margin-bottom: 1.25rem;
+      padding: 0.9rem 1rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .submit-status.visible {
+      display: block;
+    }
+
+    .submit-status.success {
+      background: #e8f4ea;
+      border: 1px solid #2e7d32;
+      color: #1b4d20;
+    }
+
+    .submit-status.error {
+      background: #fce8e6;
+      border: 1px solid #c62828;
+      color: #6d1b1b;
+    }
+
+    button[type="submit"]:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      transform: none;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="site-logo" href="https://www.thousandeyes.com" target="_blank" rel="noopener noreferrer" aria-label="ThousandEyes (opens in new tab)">
+        <img src="assets/thousandeyes-logo.png" width="150" height="20" alt="ThousandEyes" />
+      </a>
+      <div class="site-header-titles">
+        <h1>Product and Customer Success Interlock</h1>
+        <p class="sub">
+          Choose how you want to work with Customer Success: request support or share updates meant for customer notification.
+        </p>
+      </div>
+      <div class="site-header-spacer" aria-hidden="true"></div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div id="submit-status" class="submit-status" role="status" aria-live="polite"></div>
+
+    <div class="path-pick" role="tablist" aria-label="Choose a pathway">
+      <div class="path-option">
+        <input type="radio" name="pathway" id="path-request" value="request" checked />
+        <label for="path-request">
+          <strong>Request for CS</strong>
+          <span>Ask the CS team for help with timing tied to urgency.</span>
+        </label>
+      </div>
+      <div class="path-option">
+        <input type="radio" name="pathway" id="path-notification" value="notification" />
+        <label for="path-notification">
+          <strong>Customer Notification</strong>
+          <span>Give CS polished info they can share with customers.</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Pathway 1: Request for CS -->
+    <section
+      id="panel-request"
+      class="panel active"
+      aria-labelledby="path-request-title"
+      role="tabpanel"
+      aria-hidden="false"
+    >
+      <h2 id="path-request-title">Request for CS</h2>
+      <p class="hint">Tell us what you need. We will route it with the turnaround that matches the urgency you select.</p>
+
+      <form
+        id="form-request"
+        action="#"
+        method="post"
+        data-mail-subject="[Product and Customer Success Interlock] Request for CS"
+      >
+        <input type="text" name="_gotcha" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+        <div class="row">
+          <label class="field" for="req-name">Name</label>
+          <input type="text" id="req-name" name="name" required autocomplete="name" />
+        </div>
+        <div class="row">
+          <label class="field" for="req-email">Email</label>
+          <input type="email" id="req-email" name="email" required autocomplete="email" />
+        </div>
+        <div class="row">
+          <label class="field" for="req-urgency">Level of urgency</label>
+          <select id="req-urgency" name="urgency" required>
+            <option value="" disabled selected>Select urgency</option>
+            <option value="high">High: target response within 3 business days</option>
+            <option value="medium">Medium: target response within 5 business days</option>
+            <option value="low">Low: target response within 8 business days</option>
+          </select>
+        </div>
+        <div class="row">
+          <label class="field" for="req-body">Your request</label>
+          <textarea id="req-body" name="request" required placeholder="Describe what you need from CS"></textarea>
+        </div>
+        <div class="row">
+          <label class="field" for="req-value">Value of this request</label>
+          <textarea id="req-value" name="value" class="sm" required placeholder="Why this matters for customers, the business, or both"></textarea>
+        </div>
+        <div class="actions">
+          <button type="submit">Submit request</button>
+          <span class="note">Submissions are sent through Formspree to the inbox you configured for this form.</span>
+        </div>
+      </form>
+    </section>
+
+    <!-- Pathway 2: Customer Notification -->
+    <section
+      id="panel-notification"
+      class="panel"
+      aria-labelledby="path-notification-title"
+      role="tabpanel"
+      aria-hidden="true"
+    >
+      <h2 id="path-notification-title">Customer Notification</h2>
+      <p class="hint">Use this when you have something CS should communicate externally. Pick a clear target notification date, impact, and where customers can learn more.</p>
+
+      <div class="callout" role="note">
+        Please submit <strong>wording and details that are ready to go to customers</strong>: clear, accurate, and appropriate to send as-is (or with light CS edits). Avoid rough notes or internal-only context in the customer-facing fields.
+      </div>
+
+      <form
+        id="form-notification"
+        action="#"
+        method="post"
+        data-mail-subject="[Product and Customer Success Interlock] Customer Notification"
+      >
+        <input type="text" name="_gotcha" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+        <div class="row">
+          <label class="field" for="no-name">Name</label>
+          <input type="text" id="no-name" name="name" required autocomplete="name" />
+        </div>
+        <div class="row">
+          <label class="field" for="no-email">Email</label>
+          <input type="email" id="no-email" name="email" required autocomplete="email" />
+        </div>
+        <div class="row">
+          <label class="field" for="no-target-notification-date">Target notification date</label>
+          <input type="date" id="no-target-notification-date" name="target_notification_date" required />
+          <p class="urgency-help">When you want CS to notify customers, or when the feature is live or planned to go live.</p>
+        </div>
+        <div class="row">
+          <label class="field" for="no-impact">Impact</label>
+          <textarea id="no-impact" name="impact" class="sm" required placeholder="Who is affected and how (customer-facing language)"></textarea>
+        </div>
+        <div class="row">
+          <label class="field" for="no-more">Where should we send customers who want to know more?</label>
+          <textarea id="no-more" name="learn_more" class="sm" required placeholder="Help article URL, in-app path, contact route, or other next step"></textarea>
+        </div>
+        <div class="row">
+          <label class="field" for="no-message">Customer-facing message (ready to share)</label>
+          <textarea id="no-message" name="customer_message" required placeholder="Paste or write the update as it should read for customers"></textarea>
+        </div>
+        <div class="actions">
+          <button type="submit">Submit Customer Notification</button>
+          <span class="note">Submissions are sent through Formspree to the inbox you configured for this form.</span>
+        </div>
+      </form>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>Product and Customer Success Interlock: internal coordination between Product and Customer Success.</p>
+    <p>Cisco internal use. Share only on approved Cisco channels.</p>
+  </footer>
+
+  <script>
+    (function () {
+      var FORMSPREE_ENDPOINT = "https://formspree.io/f/xnjldbnb";
+
+      var requestRadio = document.getElementById("path-request");
+      var notificationRadio = document.getElementById("path-notification");
+      var panelRequest = document.getElementById("panel-request");
+      var panelNotification = document.getElementById("panel-notification");
+      var statusEl = document.getElementById("submit-status");
+
+      function showStatus(kind, message) {
+        statusEl.className = "submit-status visible " + (kind === "success" ? "success" : "error");
+        statusEl.textContent = message;
+        statusEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+
+      function clearStatus() {
+        statusEl.className = "submit-status";
+        statusEl.textContent = "";
+      }
+
+      function syncPanels() {
+        var isRequest = requestRadio.checked;
+        panelRequest.classList.toggle("active", isRequest);
+        panelNotification.classList.toggle("active", !isRequest);
+        panelRequest.setAttribute("aria-hidden", isRequest ? "false" : "true");
+        panelNotification.setAttribute("aria-hidden", isRequest ? "true" : "false");
+      }
+
+      requestRadio.addEventListener("change", syncPanels);
+      notificationRadio.addEventListener("change", syncPanels);
+      syncPanels();
+
+      function fieldValue(el) {
+        if (el.type === "select-one") {
+          var opt = el.options[el.selectedIndex];
+          return opt ? opt.text : el.value;
+        }
+        return el.value;
+      }
+
+      function collectPayload(form, formType) {
+        var gotcha = form.querySelector('[name="_gotcha"]');
+        if (gotcha && gotcha.value.replace(/\s/g, "")) {
+          return null;
+        }
+
+        var subjectLine = form.getAttribute("data-mail-subject") || "Product and Customer Success Interlock";
+
+        var payload = {
+          formType: formType,
+          submittedAt: new Date().toISOString(),
+          _subject: subjectLine,
+          _template: "table",
+        };
+
+        var els = form.elements;
+        for (var i = 0; i < els.length; i++) {
+          var el = els[i];
+          if (!el.name || el.name === "_gotcha") {
+            continue;
+          }
+          if (el.type === "submit" || el.type === "button" || el.disabled) {
+            continue;
+          }
+          payload[el.name] = fieldValue(el);
+        }
+
+        return payload;
+      }
+
+      function submitForm(form, formType) {
+        clearStatus();
+
+        var payload = collectPayload(form, formType);
+        if (!payload) {
+          return;
+        }
+
+        var btn = form.querySelector('button[type="submit"]');
+        if (btn) {
+          btn.disabled = true;
+        }
+
+        fetch(FORMSPREE_ENDPOINT, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify(payload),
+        })
+          .then(function (res) {
+            return res.json().then(function (data) {
+              if (!res.ok || (data && data.error)) {
+                var msg =
+                  (data && data.error) ||
+                  (data && data.errors && JSON.stringify(data.errors)) ||
+                  "Server returned " + res.status;
+                throw new Error(typeof msg === "string" ? msg : JSON.stringify(msg));
+              }
+              return data;
+            });
+          })
+          .then(function () {
+            showStatus("success", "Your submission was sent. If you require follow up please reach out to kvandeho@cisco.com");
+            form.reset();
+          })
+          .catch(function (err) {
+            showStatus(
+              "error",
+              "Could not send: " + (err && err.message ? err.message : "network error") + "."
+            );
+          })
+          .finally(function () {
+            if (btn) {
+              btn.disabled = false;
+            }
+          });
+      }
+
+      document.getElementById("form-request").addEventListener("submit", function (e) {
+        e.preventDefault();
+        submitForm(e.target, "request");
+      });
+
+      document.getElementById("form-notification").addEventListener("submit", function (e) {
+        e.preventDefault();
+        submitForm(e.target, "notification");
+      });
+    })();
+  </script>
+</body>
+</html>
