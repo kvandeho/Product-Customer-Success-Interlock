@@ -52,13 +52,14 @@
       width: 100%;
     }
 
-    .site-header {
-      background: linear-gradient(165deg, var(--ocean-blue) 0%, var(--midnight-blue) 55%, var(--jungle) 100%);
-      color: #fff;
-      padding: 1.5rem 1rem 2rem;
-      position: relative;
-      box-shadow: 0 4px 24px rgba(13, 39, 77, 0.25);
-    }
+ .site-header {
+  background: linear-gradient(165deg, var(--ocean-blue) 0%, var(--midnight-blue) 55%, var(--jungle) 100%);
+  color: #fff;
+  padding: 1.5rem 1rem 2rem;
+  position: relative;
+  box-shadow: 0 4px 24px rgba(13, 39, 77, 0.25);
+  overflow: visible;
+}
 
     .site-header::after {
       content: "";
@@ -71,25 +72,26 @@
     }
 
 .site-header-inner {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 1rem;
+  position: relative;
   max-width: 1100px;
   margin: 0 auto;
+  min-height: 56px;
 }
 
-    .site-logo {
-  justify-self: start;
-  align-self: center;
+.site-logo {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
   display: block;
   line-height: 0;
 }
 
-  .site-logo img {
+.site-logo img {
+  display: block;
   height: 44px;
   width: auto;
-  max-width: none;
+  max-width: 260px;
 }
 
     .site-logo:focus-visible {
@@ -98,10 +100,11 @@
       border-radius: 4px;
     }
 
-    .site-header-titles {
-      text-align: center;
-      min-width: 0;
-    }
+.site-header-titles {
+  text-align: center;
+  min-width: 0;
+  padding: 0 220px;
+}
 
     .site-header-spacer {
       min-height: 1px;
@@ -427,8 +430,6 @@
         <p class="sub">
           Choose how you want to work with Customer Success: request support or share updates meant for customer notification.
         </p>
-      </div>
-      <div class="site-header-spacer" aria-hidden="true"></div>
     </div>
   </header>
 
