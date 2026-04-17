@@ -72,30 +72,29 @@
 
     .site-header-inner {
       display: grid;
-      grid-template-columns: minmax(0, 150px) minmax(0, 1fr) minmax(0, 150px);
+      grid-template-columns: minmax(0, 220px) minmax(0, 1fr) minmax(0, 220px);
       align-items: center;
       gap: 0.75rem;
       max-width: 960px;
       margin: 0 auto;
     }
 
-.site-logo {
-  justify-self: start;
-  align-self: center;
-  display: block;
-  line-height: 0;
-  min-width: 260px;
-}
+    .site-logo {
+      justify-self: start;
+      align-self: start;
+      display: block;
+      line-height: 0;
+    }
 
-.site-logo img {
-  display: block !important;
-  height: 80px !important;
-  width: auto !important;
-  max-width: none !important;
-  min-width: 260px !important;
-  object-fit: contain !important;
-  object-position: left center !important;
-}
+    .site-logo img {
+      display: block;
+      height: clamp(36px, 6.5vw, 52px);
+      width: auto;
+      max-width: 220px;
+      object-fit: contain;
+      object-position: left center;
+      filter: brightness(0) invert(1);
+    }
 
     .site-logo:focus-visible {
       outline: 2px solid #fff;
@@ -113,14 +112,10 @@
     }
 
     @media (max-width: 560px) {
-   .site-header-inner {
-  display: grid;
-  grid-template-columns: 280px minmax(0, 1fr) 40px;
-  align-items: center;
-  gap: 1rem;
-  max-width: 1100px;
-  margin: 0 auto;
-}
+      .site-header-inner {
+        grid-template-columns: 1fr;
+        justify-items: stretch;
+      }
 
       .site-logo {
         justify-self: start;
@@ -128,7 +123,7 @@
       }
 
       .site-logo img {
-        max-width: min(200px, 85vw);
+        max-width: min(260px, 90vw);
       }
 
       .site-header-spacer {
@@ -433,7 +428,7 @@
   <header class="site-header">
     <div class="site-header-inner">
       <a class="site-logo" href="https://www.thousandeyes.com" target="_blank" rel="noopener noreferrer" aria-label="ThousandEyes (opens in new tab)">
-        <img src="thousandeyes-logo.png" alt="ThousandEyes" />
+        <img src="assets/thousandeyes-logo.png" width="220" height="30" alt="ThousandEyes" />
       </a>
       <div class="site-header-titles">
         <h1>Product and Customer Success Interlock</h1>
