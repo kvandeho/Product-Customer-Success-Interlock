@@ -70,11 +70,11 @@
       background: linear-gradient(90deg, var(--sky-blue), var(--orange));
     }
 
-   .site-header-inner {
+.site-header-inner {
   display: grid;
-  grid-template-columns: 220px minmax(0, 1fr) 220px;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
   max-width: 1100px;
   margin: 0 auto;
 }
@@ -87,12 +87,9 @@
 }
 
   .site-logo img {
-  display: block;
   height: 44px;
   width: auto;
-  max-width: 220px;
-  object-fit: contain;
-  object-position: left center;
+  max-width: none;
 }
 
     .site-logo:focus-visible {
